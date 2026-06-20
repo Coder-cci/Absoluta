@@ -1,10 +1,10 @@
-# 13-BILLION-CIPHER
+# Absoluta
 
 A cryptographic system implementing a variation of the one-time pad with an expanded character set and salt insertion mechanism.
 
 ## Overview
 
-13-BILLION-CIPHER is a symmetric encryption system that achieves perfect secrecy through a combination of large ciphertext alphabet, random salt insertion, and XOR masking. The system provides 13.7 billion possible combinations per source character.
+Absoluta is a symmetric encryption system that achieves perfect secrecy through a combination of large ciphertext alphabet, random salt insertion, and XOR masking. The system provides 13.7 billion possible combinations per source character.
 
 ## Core Algorithm
 
@@ -77,11 +77,11 @@ This ensures avalanche effect: changing one bit in the seed completely alters th
 
 - Python 3.8 and higher interpreter
 - At least 1 any cipher alphabet file in alphabets\ directory
-- Basically, all you need to do to run the program is place “alphabets\” folder and “main_app.py” file in the same directory
+- Basically, all you need to do to run the program is place “alphabets\” folder and “absoluta.py” file in the same directory
 
 ## Usage
 
-1. Execute "main_app.py" with any Python 3.8 and higher interpreter
+1. Execute "absoluta.py" with any Python 3.8 and higher interpreter
 2. Select source alphabet (ASCII, Russian, or Mathematical)
 3. Enter text in input field
 4. Configure key parameters
