@@ -194,11 +194,17 @@ class RetroCipherApp:
 
         self.root.resizable(False, False)
 
-        self.cipher_alphabets = self.scan_cipher_alphabets()
+        self.alphabet_folder = os.path.join(os.path.dirname(__file__), "alphabets")
+        
+        if not os.path.exists(self.alphabet_folder):
+            os.makedirs(self.alphabet_folder)
+            print(f"Created alphabets folder: {self.alphabet_folder}")
+
         self.current_cipher_alphabet = None
 
         self.setup_ui()
 
+        self.refresh_alphabet_list()
         self.load_cipher_alphabet()
         self.update_key_display()
 
@@ -207,7 +213,7 @@ class RetroCipherApp:
         self.weight_left.bind('<KeyRelease>', self.on_param_change)
         self.weight_mid.bind('<KeyRelease>', self.on_param_change)
         self.weight_right.bind('<KeyRelease>', self.on_param_change)
-        self.cipher_alphabet_combo.bind('<<ComboboxSelected>>', self.on_param_change)
+        self.cipher_alphabet_combo.bind('<<ComboboxSelected>>', self.on_cipher_alphabet_change)
 
     def setup_ui(self):
         menubar = tk.Menu(self.root, bg=RetroColors.BG_GRAY, fg=RetroColors.TEXT_FG,
@@ -296,10 +302,9 @@ class RetroCipherApp:
 
         tk.Label(cipher_frame, text="Cipher alphabet:", bg=RetroColors.BG_GRAY,
                  font=("MS Sans Serif", 9)).pack(side=tk.LEFT, padx=2)
-        self.cipher_alphabet_combo = RetroCombobox(cipher_frame, values=self.cipher_alphabets, width=30)
+        
+        self.cipher_alphabet_combo = RetroCombobox(cipher_frame, values=[], width=35)
         self.cipher_alphabet_combo.pack(side=tk.LEFT, padx=2)
-        if self.cipher_alphabets:
-            self.cipher_alphabet_combo.current(0)
         self.cipher_alphabet_combo.bind('<<ComboboxSelected>>', self.on_cipher_alphabet_change)
 
         self.cipher_alphabet_info = tk.Label(cipher_frame, text="", bg=RetroColors.BG_GRAY,
@@ -406,23 +411,60 @@ class RetroCipherApp:
                                font=("MS Sans Serif", 9), anchor=tk.W)
         self.status.pack(fill=tk.X, padx=2)
 
-    def scan_cipher_alphabets(self):
+    def refresh_alphabet_list(self):
         try:
-            alphabet_folder = os.path.join(os.path.dirname(__file__), "alphabets")
-            files = [f for f in os.listdir(alphabet_folder) if f.endswith('.txt')]
-            return files if files else ['alphabet1660.txt']
-        except:
-            return ['alphabet1660.txt']
+            if not os.path.exists(self.alphabet_folder):
+                os.makedirs(self.alphabet_folder)
+                return
+
+            files = [f for f in os.listdir(self.alphabet_folder) if f.endswith('.txt')]
+            files.sort()
+            
+            if not files:
+                return
+            
+            nice_names = []
+            for f in files:
+                full_path = os.path.join(self.alphabet_folder, f)
+                try:
+                    with open(full_path, 'r', encoding='utf-8-sig') as file:
+                        content = file.read()
+                        real_count = len(content)
+                    nice_names.append(f"{f} ({real_count} chars)")
+                except Exception as e:
+                    print(f"Error reading {f}: {e}")
+                    nice_names.append(f)
+            
+            self.cipher_alphabet_combo['values'] = nice_names
+            
+            if nice_names:
+                current = self.cipher_alphabet_combo.get()
+                if current not in nice_names:
+                    self.cipher_alphabet_combo.current(0)
+            
+        except Exception as e:
+            print(f"Refresh error: {e}")
 
     def load_cipher_alphabet(self):
-        filename = self.cipher_alphabet_combo.get()
+        selected = self.cipher_alphabet_combo.get()
+        
+        if not selected:
+            print("No alphabet selected")
+            return
+        
+        if ' ' in selected:
+            filename = selected.split(' ')[0]
+        else:
+            filename = selected
+        
         if filename:
-            alphabet_folder = os.path.join(os.path.dirname(__file__), "alphabets")
-            full_path = os.path.join(alphabet_folder, filename)
+            full_path = os.path.join(self.alphabet_folder, filename)
+            
             self.current_cipher_alphabet = CipherAlphabet(full_path)
-            info = f"{len(self.current_cipher_alphabet)} characters"
+            size = len(self.current_cipher_alphabet)
+            info = f"{size} characters"
             self.cipher_alphabet_info.config(text=info)
-            self.cipher_size_label.config(text=str(len(self.current_cipher_alphabet)))
+            self.cipher_size_label.config(text=str(size))
             self.status.config(text=f"Loaded alphabet: {filename} ({info})")
 
     def on_cipher_alphabet_change(self, event=None):
