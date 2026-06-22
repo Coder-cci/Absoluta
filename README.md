@@ -69,6 +69,8 @@ The program automatically:
 
 ### Combinatorial Complexity
 
+The table below shows the number of possible combinations for different plaintext lengths with each alphabet.
+
 | Alphabet | Real Size | 1 Char | 10 Chars | 100 Chars | 1000 Chars |
 |----------|-----------|--------|----------|-----------|------------|
 | alphabet1635.txt | 1,635 | ~4.37×10⁹ | ~10⁹⁶ | ~10⁹⁶⁰ | ~10⁹⁶⁰⁰ |
