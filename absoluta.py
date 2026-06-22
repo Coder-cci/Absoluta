@@ -813,7 +813,7 @@ class RetroCipherApp:
     def show_about(self):
         messagebox.showinfo("About",
                             "Absoluta\n"
-                            "Version 0.1")
+                            "Version 0.1.0")
 
 
 if __name__ == "__main__":
