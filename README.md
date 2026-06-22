@@ -4,7 +4,7 @@ A cryptographic system implementing a variation of the one-time pad with an expa
 
 ## Overview
 
-Absoluta is a symmetric encryption system that achieves perfect secrecy through a combination of large ciphertext alphabet, random salt insertion, and XOR masking. The system provides billions to trillions of possible combinations per source character, depending on the chosen cipher alphabet.
+Absoluta is a symmetric encryption system that achieves perfect secrecy through a combination of large ciphertext alphabet, random salt insertion, and XOR masking. The system provides billions to hundreds of trillions of possible combinations per source character, depending on the chosen cipher alphabet.
 
 ## Core Algorithm
 
@@ -55,35 +55,25 @@ This ensures avalanche effect: changing one bit in the seed completely alters th
 
 The system supports multiple cipher alphabets stored in the `alphabets\` folder:
 
-- **alphabet1660.txt**: 1635 unique Unicode characters (primarily extended Latin, Cyrillic, Greek, and special symbols)
-- **alphabet7705.txt**: 7705 unique Unicode characters (includes extended symbols, emojis, math symbols, and more)
+- **alphabet1635.txt**: 1,635 unique Unicode characters
+- **alphabet5483.txt**: 5,483 unique Unicode characters
+- **alphabet40326.txt**: 40,326 unique Unicode characters
 
 The program automatically:
 - Scans the `alphabets\` folder for all `.txt` files
-- Counts the real number of characters in each file (not relying on filenames)
+- Counts the real number of characters in each file
 - Displays the actual size in the interface
 - Loads the selected alphabet on demand
-
-### Alphabet Statistics
-
-| Alphabet | Real Size | Combinations per Character |
-|----------|-----------|---------------------------|
-| alphabet1660.txt | 1,635 | ~4.37 × 10⁹ |
-| alphabet7705.txt | 5,483 | ~4.95 × 10¹¹ |
 
 ## Security Properties
 
 ### Combinatorial Complexity
 
-With the default 1660-character alphabet:
-- Single character: 3×1660³ + 1660² ≈ 1.37×10¹⁰ combinations
-- 10 characters: approximately 10¹⁰¹ combinations
-- 100 characters: approximately 10¹⁰¹³ combinations
-
-With the larger alphabet (5483 real characters):
-- Single character: 3×5483³ + 5483² ≈ 4.95×10¹¹ combinations
-- 10 characters: approximately 10¹¹⁷ combinations
-- 100 characters: approximately 10¹¹⁷⁰ combinations
+| Alphabet | Real Size | 1 Char | 10 Chars | 100 Chars | 1000 Chars |
+|----------|-----------|--------|----------|-----------|------------|
+| alphabet1635.txt | 1,635 | ~4.37×10⁹ | ~10⁹⁶ | ~10⁹⁶⁰ | ~10⁹⁶⁰⁰ |
+| alphabet5483.txt | 5,483 | ~4.95×10¹¹ | ~10¹¹⁷ | ~10¹¹⁷⁰ | ~10¹¹⁷⁰⁰ |
+| alphabet40326.txt | 40,326 | ~1.97×10¹⁴ | ~10¹⁴² | ~10¹⁴²⁰ | ~10¹⁴²⁰⁰ |
 
 ### Key Space
 
