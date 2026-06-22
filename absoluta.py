@@ -4,6 +4,7 @@ import hashlib
 import os
 import secrets
 import re
+import random
 
 
 class RetroColors:
@@ -204,6 +205,8 @@ class RetroCipherApp:
 
         self.setup_ui()
 
+        self.generate_random_params()
+
         self.refresh_alphabet_list()
         self.load_cipher_alphabet()
         self.update_key_display()
@@ -214,7 +217,24 @@ class RetroCipherApp:
         self.weight_mid.bind('<KeyRelease>', self.on_param_change)
         self.weight_right.bind('<KeyRelease>', self.on_param_change)
         self.cipher_alphabet_combo.bind('<<ComboboxSelected>>', self.on_cipher_alphabet_change)
+    
+    def generate_random_params(self):
+        seed = secrets.token_hex(16).upper()
+        self.seed_entry.delete(0, tk.END)
+        self.seed_entry.insert(0, seed)
 
+        salt_prob = str(random.randint(0, 999)).zfill(3)
+        self.salt_prob_entry.delete(0, tk.END)
+        self.salt_prob_entry.insert(0, salt_prob)
+
+        weights = ''.join([str(random.randint(0, 3)) for _ in range(3)])
+        self.weight_left.delete(0, tk.END)
+        self.weight_left.insert(0, weights[0])
+        self.weight_mid.delete(0, tk.END)
+        self.weight_mid.insert(0, weights[1])
+        self.weight_right.delete(0, tk.END)
+        self.weight_right.insert(0, weights[2])
+    
     def setup_ui(self):
         menubar = tk.Menu(self.root, bg=RetroColors.BG_GRAY, fg=RetroColors.TEXT_FG,
                           relief=tk.RAISED, bd=2)
